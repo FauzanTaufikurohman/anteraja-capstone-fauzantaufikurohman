@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Prototype operasional Anteraja Pharma untuk setup shipment dan verifikasi suhu.">
+  <title>Anteraja Pharma | Shipment Control</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#212121',
+            muted: '#666666',
+            line: '#e6e6e6',
+            blush: '#faeff1',
+            anteraja: '#ed0677',
+            'anteraja-dark': '#bd005f',
+            success: '#087f5b',
+            warning: '#9a6700',
+            danger: '#b42318'
+          },
+          fontFamily: { sans: ['Open Sans', 'sans-serif'] },
+          boxShadow: { panel: '0 10px 32px rgba(33, 33, 33, 0.06)' }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body class="bg-[#f8f9fa] text-ink font-sans antialiased">
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+  <div class="min-h-screen lg:flex">
+    <div id="sidebar-partial"></div>
+    <main id="main-content" class="min-w-0 flex-1 pb-24 lg:ml-64 lg:pb-0">
+      <div id="page-partial" class="mx-auto max-w-[1480px] space-y-10 px-4 py-6 sm:px-6 lg:px-10 lg:py-9"></div>
+    </main>
+  </div>
+  <div id="toast" class="pointer-events-none fixed bottom-5 left-1/2 z-50 -translate-x-1/2 translate-y-4 rounded-lg bg-ink px-4 py-3 text-sm font-semibold text-white opacity-0 shadow-lg transition-all" role="status"></div>
+  <script src="assets/app.js" defer></script>
+</body>
+</html>

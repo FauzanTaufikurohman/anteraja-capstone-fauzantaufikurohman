@@ -1,0 +1,178 @@
+<section id="monitoring" class="scroll-mt-24">
+  <div class="mb-5">
+    <h2 class="mt-1 text-2xl font-bold">Live temperature monitoring</h2>
+    <p class="mt-1 text-sm text-muted">
+      Simulasi pembacaan suhu setiap 5 detik selama shipment aktif.
+    </p>
+  </div>
+  <div
+    class="overflow-hidden rounded-xl border border-line bg-white shadow-panel"
+  >
+    <div
+      class="flex flex-wrap items-center justify-between gap-4 border-b border-line p-5"
+    >
+      <div class="flex flex-wrap items-center gap-8">
+        <label class="block text-xs text-muted"
+          >Shipment aktif<select
+            id="monitorShipmentSelect"
+            class="mt-1 block rounded-lg border border-line px-3 py-2 text-sm font-bold text-ink"
+          ></select
+        ></label>
+
+        <div>
+          <small class="block text-xs text-muted">Product</small>
+          <strong id="monitorProduct">Cold chain (2°C - 8°C)</strong>
+        </div>
+      </div>
+
+      <span
+        id="monitorStatus"
+        class="rounded-full bg-[#effaf6] px-3 py-2 text-xs font-bold text-success"
+      >
+        Monitoring aktif
+      </span>
+    </div>
+    <div class="grid gap-6 p-6 xl:grid-cols-[1fr_1.5fr]">
+      <div class="space-y-4">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-line bg-[#f8f9fa] p-5">
+            <p class="text-xs text-muted">Suhu saat ini</p>
+            <strong id="liveTemp" class="mt-2 block text-4xl">5.5°C</strong
+            ><span
+              id="liveBadge"
+              class="mt-3 inline-flex rounded-full bg-[#e4f7ef] px-3 py-1 text-xs font-bold text-success"
+              >Normal</span
+            >
+          </div>
+          <div class="rounded-xl border border-line bg-[#f8f9fa] p-5">
+            <p class="text-xs text-muted">Interval monitoring</p>
+            <strong class="mt-2 block text-2xl">5 detik</strong
+            ><small class="mt-2 block text-xs text-muted"
+              >Next check: <span id="nextCheck">-</span></small
+            >
+          </div>
+        </div>
+        <div class="rounded-xl border border-line p-5">
+          <div class="flex justify-between text-sm font-semibold">
+            <span>Temperature range</span
+            ><span class="text-anteraja">2°C - 8°C</span>
+          </div>
+          <div class="relative mt-5 h-3 rounded-full bg-[#f1f1f1]">
+            <div
+              class="absolute left-[20%] right-[20%] h-full rounded-full bg-[#bdebdc]"
+            ></div>
+            <div
+              id="monitorMarker"
+              class="absolute -top-1 h-5 w-5 rounded-full border-4 border-white bg-anteraja shadow"
+              style="left: 55%"
+            ></div>
+          </div>
+        </div>
+        <button
+          id="startMonitor"
+          class="w-full rounded-lg bg-anteraja px-5 py-3 font-bold text-white hover:bg-anteraja-dark"
+        >
+          Start / restart monitoring
+        </button>
+      </div>
+      <div class="overflow-hidden rounded-xl border border-line">
+        <div class="flex justify-between border-b border-line px-5 py-4">
+          <strong class="text-sm">Daftar shipment</strong
+          ><span class="text-xs text-muted">Data tersimpan di browser</span>
+        </div>
+        <div class="overflow-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-[#f8f9fa] text-xs text-muted">
+              <tr>
+                <th class="px-5 py-3">Shipment</th>
+                <th class="px-5 py-3">Rute</th>
+                <th class="px-5 py-3">Suhu</th>
+                <th class="px-5 py-3">Status</th>
+                <th class="px-5 py-3">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tempLog"></tbody>
+          </table>
+          <div
+            class="flex items-center justify-between border-t border-line px-5 py-3 text-xs text-muted"
+          >
+            <span id="monitorPageInfo"></span>
+            <div class="flex gap-2">
+              <button
+                id="monitorPrev"
+                class="rounded border border-line px-3 py-2 hover:bg-[#f8f9fa]"
+              >
+                Sebelumnya</button
+              ><button
+                id="monitorNext"
+                class="rounded border border-line px-3 py-2 hover:bg-[#f8f9fa]"
+              >
+                Berikutnya
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    id="temperatureModal"
+    class="modal-backdrop hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="temperatureModalTitle"
+  >
+    <div class="modal-panel max-w-xl">
+      <div
+        class="flex items-start justify-between gap-4 border-b border-line px-6 py-5"
+      >
+        <div>
+          <p class="text-xs font-bold text-anteraja">TEMPERATURE CONTROL</p>
+          <h2 id="temperatureModalTitle" class="mt-1 text-xl font-bold">
+            Atur suhu shipment
+          </h2>
+          <p id="temperatureShipmentLabel" class="mt-1 text-sm text-muted"></p>
+        </div>
+        <button
+          type="button"
+          data-close-modal="temperatureModal"
+          class="modal-close"
+          aria-label="Tutup modal"
+        >
+          ×
+        </button>
+      </div>
+      <form id="temperatureForm" class="space-y-5 p-6">
+        <label class="block text-sm font-semibold"
+          >Suhu terukur (°C)
+          <div class="mt-2 flex items-center gap-3">
+            <input
+              id="tempInput"
+              type="number"
+              step="0.1"
+              class="w-36 rounded-lg border border-line px-4 py-3 text-lg font-bold"
+            /><span class="text-muted">°C</span>
+          </div></label
+        >
+        <div
+          id="verificationBadge"
+          class="rounded-xl border border-line bg-[#f8f9fa] p-5"
+          role="status"
+        ></div>
+        <div class="flex justify-end gap-3">
+          <button
+            type="button"
+            data-close-modal="temperatureModal"
+            class="rounded-lg border border-line px-5 py-3 text-sm font-bold hover:bg-[#f8f9fa]"
+          >
+            Batal</button
+          ><button
+            class="rounded-lg bg-anteraja px-5 py-3 text-sm font-bold text-white hover:bg-anteraja-dark"
+          >
+            Simpan pemeriksaan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

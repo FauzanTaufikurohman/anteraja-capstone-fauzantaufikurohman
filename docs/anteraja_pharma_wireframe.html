@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anteraja Pharma — Shipment & Pharma Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            anteraja: {
+              50: '#FFF0F7',
+              100: '#FFD9EB',
+              500: '#E6007E',
+              600: '#C9006E',
+              700: '#A9005D'
+            },
+            ink: '#1F2937',
+            muted: '#687280',
+            border: '#E8ECF2',
+            success: '#00BFA5',
+            warning: '#FFB020',
+            danger: '#FF3B30',
+            info: '#3B82F6'
+          },
+          fontFamily: {
+            sans: ['Poppins', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 8px 30px rgba(31, 41, 55, 0.06)'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-slate-50 text-ink font-sans">
+  <div class="min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 shrink-0 bg-white border-r border-border hidden lg:flex flex-col">
+      <div class="px-6 py-5 border-b border-border">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-anteraja-500 text-white flex items-center justify-center font-bold text-lg">
+            a
+          </div>
+          <div>
+            <div class="font-bold text-xl leading-none text-anteraja-500">anteraja</div>
+            <div class="text-[10px] font-semibold tracking-[0.25em] text-slate-500 mt-1">PHARMA</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="p-4 space-y-1 text-sm">
+        <a href="#dashboard" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl bg-anteraja-50 text-anteraja-600 font-semibold">
+          <span>⌂</span> Dashboard
+        </a>
+        <a href="#shipment" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50">
+          <span>▣</span> Shipment Setup
+        </a>
+        <a href="#verification" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50">
+          <span>◉</span> Temperature Check
+        </a>
+        <a href="#monitoring" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50">
+          <span>♨</span> Temperature Monitor
+        </a>
+        <a href="#disturbance" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50">
+          <span>⚠</span> Disturbance Simulation
+        </a>
+        <a href="#service" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50">
+          <span>▱</span> Tariff & Service
+        </a>
+        <a href="#report" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50">
+          <span>▤</span> Report
+        </a>
+      </nav>
+
+      <div class="mt-auto p-4 border-t border-border">
+        <button class="w-full text-left px-4 py-3 text-sm text-slate-500 hover:bg-slate-50 rounded-xl">
+          ⚙ Settings
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 min-w-0">
+      <!-- Top Header -->
+      <header class="bg-white border-b border-border px-5 lg:px-8 py-4 sticky top-0 z-20">
+        <div class="max-w-[1500px] mx-auto flex items-center justify-between gap-4">
+          <div>
+            <div class="text-xs font-semibold text-anteraja-500 tracking-wide">ANTERAJA PHARMA</div>
+            <h1 class="text-xl lg:text-2xl font-bold text-slate-900">Shipment & Pharma Calculator</h1>
+            <p class="text-xs lg:text-sm text-slate-500 mt-1">
+              Pre-Shipment Temperature Verification & Compliance System
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button class="hidden sm:inline-flex px-4 py-2.5 border border-border rounded-xl text-sm font-medium hover:bg-slate-50">
+              Help
+            </button>
+            <button class="px-4 py-2.5 rounded-xl bg-anteraja-500 hover:bg-anteraja-600 text-white text-sm font-semibold shadow-sm">
+              + New Shipment
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="max-w-[1500px] mx-auto p-5 lg:p-8 space-y-10">
+
+        <!-- Dashboard -->
+        <section id="dashboard" class="scroll-mt-24">
+          <div class="flex items-end justify-between mb-5">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-anteraja-500">01 / Overview</p>
+              <h2 class="text-2xl font-bold mt-1">Dashboard</h2>
+              <p class="text-sm text-slate-500 mt-1">Pantau shipment dan status temperature monitoring.</p>
+            </div>
+          </div>
+
+          <div class="grid xl:grid-cols-[1.5fr_1fr] gap-5">
+            <div class="rounded-2xl bg-gradient-to-r from-anteraja-500 to-pink-500 text-white p-7 shadow-soft overflow-hidden relative">
+              <div class="relative z-10 max-w-xl">
+                <span class="inline-flex px-3 py-1 rounded-full bg-white/15 text-xs font-medium">Temperature Compliance</span>
+                <h3 class="text-2xl lg:text-3xl font-bold mt-4">Pastikan shipment farmasi tetap dalam range suhu.</h3>
+                <p class="text-sm text-white/80 mt-3 leading-6">
+                  Verifikasi suhu sebelum pengiriman dan monitor perubahan suhu selama simulasi perjalanan.
+                </p>
+                <button class="mt-6 bg-white text-anteraja-600 px-5 py-3 rounded-xl text-sm font-semibold hover:bg-pink-50">
+                  Buat Shipment Baru →
+                </button>
+              </div>
+              <div class="absolute right-8 bottom-5 text-[110px] opacity-20">♨</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-white border border-border rounded-2xl p-5 shadow-soft">
+                <div class="text-xs text-slate-500">Active Shipments</div>
+                <div class="text-3xl font-bold mt-2">3</div>
+                <div class="text-xs text-slate-400 mt-1">Dalam perjalanan</div>
+              </div>
+              <div class="bg-white border border-border rounded-2xl p-5 shadow-soft">
+                <div class="text-xs text-slate-500">Completed</div>
+                <div class="text-3xl font-bold mt-2">12</div>
+                <div class="text-xs text-slate-400 mt-1">Shipment selesai</div>
+              </div>
+              <div class="bg-white border border-border rounded-2xl p-5 shadow-soft">
+                <div class="text-xs text-slate-500">Excursion Alerts</div>
+                <div class="text-3xl font-bold mt-2 text-anteraja-500">1</div>
+                <div class="text-xs text-slate-400 mt-1">Perlu perhatian</div>
+              </div>
+              <div class="bg-white border border-border rounded-2xl p-5 shadow-soft">
+                <div class="text-xs text-slate-500">Total Shipments</div>
+                <div class="text-3xl font-bold mt-2">15</div>
+                <div class="text-xs text-slate-400 mt-1">Keseluruhan</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Shipment + Verification split -->
+        <section class="grid xl:grid-cols-2 gap-5">
+          <!-- Shipment -->
+          <div id="shipment" class="scroll-mt-24 bg-white border border-border rounded-2xl shadow-soft">
+            <div class="px-6 py-5 border-b border-border">
+              <p class="text-xs font-semibold text-anteraja-500">02 / Shipment Setup</p>
+              <h2 class="text-lg font-bold mt-1">Data Pengiriman & Spesifikasi Barang</h2>
+            </div>
+
+            <div class="p-6 space-y-5">
+              <div class="grid sm:grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="text-sm font-semibold">Kota Asal</span>
+                  <select class="mt-2 w-full rounded-xl border border-border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-anteraja-100 focus:border-anteraja-500">
+                    <option>Jakarta</option>
+                    <option>Bandung</option>
+                    <option>Surabaya</option>
+                  </select>
+                </label>
+                <label class="block">
+                  <span class="text-sm font-semibold">Kota Tujuan</span>
+                  <select class="mt-2 w-full rounded-xl border border-border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-anteraja-100 focus:border-anteraja-500">
+                    <option>Surabaya</option>
+                    <option>Bandung</option>
+                    <option>Jakarta</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="text-sm font-semibold">Berat Paket</span>
+                  <div class="relative mt-2">
+                    <input value="2.5" class="w-full rounded-xl border border-border px-4 py-3 pr-12 text-sm focus:ring-2 focus:ring-anteraja-100 focus:border-anteraja-500 outline-none" />
+                    <span class="absolute right-4 top-3 text-sm text-slate-400">kg</span>
+                  </div>
+                </label>
+                <div>
+                  <span class="text-sm font-semibold">Dimensi Paket</span>
+                  <div class="grid grid-cols-3 gap-2 mt-2">
+                    <input value="30" class="w-full rounded-xl border border-border px-3 py-3 text-sm text-center outline-none focus:border-anteraja-500" />
+                    <input value="20" class="w-full rounded-xl border border-border px-3 py-3 text-sm text-center outline-none focus:border-anteraja-500" />
+                    <input value="20" class="w-full rounded-xl border border-border px-3 py-3 text-sm text-center outline-none focus:border-anteraja-500" />
+                  </div>
+                  <p class="text-xs text-slate-400 mt-2">Volumetric Weight: <strong class="text-slate-600">2.0 kg</strong></p>
+                </div>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-5">
+                <label class="block">
+                  <span class="text-sm font-semibold">Jumlah Koli / Box</span>
+                  <input value="1" class="mt-2 w-full rounded-xl border border-border px-4 py-3 text-sm outline-none focus:border-anteraja-500" />
+                </label>
+                <fieldset>
+                  <legend class="text-sm font-semibold">Kategori Produk Farmasi</legend>
+                  <div class="mt-2 space-y-2.5">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                      <input type="radio" name="category" checked class="mt-1 accent-pink-600">
+                      <span class="text-sm">Cold Chain <span class="text-slate-400">(2°C – 8°C)</span></span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                      <input type="radio" name="category" class="mt-1 accent-pink-600">
+                      <span class="text-sm">Ambient <span class="text-slate-400">(15°C – 25°C)</span></span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                      <input type="radio" name="category" class="mt-1 accent-pink-600">
+                      <span class="text-sm">Frozen <span class="text-slate-400">(parameter produk)</span></span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                      <input type="radio" name="category" class="mt-1 accent-pink-600">
+                      <span class="text-sm">Alat Kesehatan</span>
+                    </label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="flex justify-end">
+                <button class="px-5 py-3 rounded-xl bg-anteraja-500 hover:bg-anteraja-600 text-white text-sm font-semibold">
+                  Simpan & Lanjutkan →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Verification -->
+          <div id="verification" class="scroll-mt-24 bg-white border border-border rounded-2xl shadow-soft">
+            <div class="px-6 py-5 border-b border-border">
+              <p class="text-xs font-semibold text-anteraja-500">03 / Pre-Shipment Verification</p>
+              <h2 class="text-lg font-bold mt-1">Verifikasi Suhu Pra-Pengiriman</h2>
+            </div>
+
+            <div class="p-6 space-y-6">
+              <div>
+                <label class="text-sm font-semibold">Input Suhu Terukur Pra-Pengiriman (°C)</label>
+                <div class="flex items-center gap-3 mt-2">
+                  <input id="tempInput" type="number" step="0.1" value="5.5"
+                    class="w-32 rounded-xl border border-border px-4 py-3 text-lg font-semibold outline-none focus:border-anteraja-500" />
+                  <span class="text-slate-500">°C</span>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs text-slate-500 mb-2">
+                  <span>0°C</span><span>2°C</span><span>5°C</span><span>8°C</span><span>10°C</span>
+                </div>
+                <div class="h-3 rounded-full bg-slate-100 relative overflow-hidden">
+                  <div class="absolute left-[20%] right-[20%] h-full bg-emerald-100"></div>
+                  <div id="tempMarker" class="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-anteraja-500 border-4 border-white shadow" style="left:55%"></div>
+                </div>
+              </div>
+
+              <div id="verificationBadge" class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+                <div class="flex gap-4">
+                  <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center text-lg">✓</div>
+                  <div>
+                    <div class="font-bold text-emerald-700">SAFE IN RANGE</div>
+                    <p class="text-sm text-emerald-700/80 mt-1">Suhu berada dalam range Cold Chain 2°C – 8°C.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-xl bg-blue-50 border border-blue-100 p-4 text-sm text-blue-700">
+                <strong>Informasi:</strong> lakukan verifikasi awal sebelum shipment masuk ke tahap monitoring.
+              </div>
+
+              <div class="flex justify-between">
+                <button class="px-4 py-2.5 rounded-xl border border-border text-sm font-semibold hover:bg-slate-50">← Kembali</button>
+                <button class="px-5 py-2.5 rounded-xl bg-anteraja-500 hover:bg-anteraja-600 text-white text-sm font-semibold">Start Monitoring →</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Monitoring -->
+        <section id="monitoring" class="scroll-mt-24">
+          <div class="mb-5">
+            <p class="text-xs font-semibold text-anteraja-500">04 / Live Monitoring</p>
+            <h2 class="text-2xl font-bold mt-1">Live Temperature Monitoring</h2>
+            <p class="text-sm text-slate-500 mt-1">Simulasi pembacaan suhu setiap 5 detik selama shipment aktif.</p>
+          </div>
+
+          <div class="bg-white border border-border rounded-2xl shadow-soft overflow-hidden">
+            <div class="p-5 border-b border-border flex flex-wrap gap-4 items-center justify-between">
+              <div>
+                <div class="text-xs text-slate-400">Shipment ID</div>
+                <div class="font-semibold">DPSVA-20260924-001</div>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400">Product</div>
+                <div class="font-semibold">Cold Chain (2°C – 8°C)</div>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400">Service</div>
+                <div class="font-semibold">Anteraja Pharma</div>
+              </div>
+              <span id="monitorStatus" class="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                ● Monitoring Active
+              </span>
+            </div>
+
+            <div class="p-6 grid xl:grid-cols-[1fr_1.5fr] gap-6">
+              <div class="space-y-4">
+                <div class="grid sm:grid-cols-2 gap-4">
+                  <div class="rounded-2xl bg-slate-50 p-5 border border-border">
+                    <div class="text-xs text-slate-500">Suhu Saat Ini</div>
+                    <div id="liveTemp" class="text-4xl font-bold mt-2">5.5°C</div>
+                    <span id="liveBadge" class="inline-flex mt-3 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">Normal</span>
+                  </div>
+                  <div class="rounded-2xl bg-slate-50 p-5 border border-border">
+                    <div class="text-xs text-slate-500">Interval Monitoring</div>
+                    <div class="text-2xl font-bold mt-2">5 detik</div>
+                    <div class="text-xs text-slate-400 mt-2">Next check: <span id="nextCheck">—</span></div>
+                  </div>
+                </div>
+
+                <div class="rounded-2xl border border-border p-5">
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm font-semibold">Temperature Range</span>
+                    <span class="text-sm font-bold text-anteraja-500">2°C – 8°C</span>
+                  </div>
+                  <div class="mt-5 h-3 rounded-full bg-slate-100 relative">
+                    <div class="absolute left-[20%] right-[20%] h-full bg-emerald-100 rounded-full"></div>
+                    <div id="monitorMarker" class="absolute w-5 h-5 rounded-full bg-anteraja-500 border-4 border-white shadow -top-1" style="left:55%"></div>
+                  </div>
+                </div>
+
+                <button id="startMonitor" class="w-full px-5 py-3 rounded-xl bg-anteraja-500 hover:bg-anteraja-600 text-white font-semibold">
+                  Start / Restart Monitoring
+                </button>
+              </div>
+
+              <div class="rounded-2xl border border-border overflow-hidden">
+                <div class="px-5 py-4 border-b border-border flex justify-between">
+                  <span class="font-semibold text-sm">Riwayat Suhu</span>
+                  <span class="text-xs text-slate-400">Latest readings</span>
+                </div>
+                <div class="overflow-auto">
+                  <table class="w-full text-sm">
+                    <thead class="bg-slate-50 text-xs text-slate-500">
+                      <tr>
+                        <th class="text-left px-5 py-3">Waktu</th>
+                        <th class="text-left px-5 py-3">Suhu</th>
+                        <th class="text-left px-5 py-3">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tempLog">
+                      <tr class="border-t border-border"><td class="px-5 py-3">09:42:15</td><td class="px-5 py-3">5.5°C</td><td class="px-5 py-3 text-emerald-600">● Normal</td></tr>
+                      <tr class="border-t border-border"><td class="px-5 py-3">09:42:10</td><td class="px-5 py-3">5.5°C</td><td class="px-5 py-3 text-emerald-600">● Normal</td></tr>
+                      <tr class="border-t border-border"><td class="px-5 py-3">09:42:05</td><td class="px-5 py-3">5.6°C</td><td class="px-5 py-3 text-emerald-600">● Normal</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Disturbance -->
+        <section id="disturbance" class="scroll-mt-24">
+          <div class="mb-5">
+            <p class="text-xs font-semibold text-anteraja-500">05 / Simulation</p>
+            <h2 class="text-2xl font-bold mt-1">Temperature Disturbance Simulation</h2>
+            <p class="text-sm text-slate-500 mt-1">Simulasikan kenaikan atau penurunan suhu tanpa sensor fisik.</p>
+          </div>
+
+          <div class="grid xl:grid-cols-2 gap-5">
+            <div class="bg-white border border-border rounded-2xl shadow-soft p-6">
+              <h3 class="font-bold">Konfigurasi Disturbance</h3>
+              <p class="text-xs text-slate-400 mt-1">Monitoring tetap membaca kondisi setiap 5 detik.</p>
+
+              <div class="mt-6">
+                <div class="text-sm font-semibold mb-3">Jenis Gangguan</div>
+                <div class="grid sm:grid-cols-2 gap-3">
+                  <label class="border border-anteraja-200 bg-anteraja-50 rounded-xl p-4 cursor-pointer">
+                    <input type="radio" name="disturbance" value="heat" checked class="accent-pink-600">
+                    <span class="ml-2 text-sm font-semibold">Heat / Peningkatan Suhu</span>
+                  </label>
+                  <label class="border border-border rounded-xl p-4 cursor-pointer hover:bg-slate-50">
+                    <input type="radio" name="disturbance" value="cold" class="accent-pink-600">
+                    <span class="ml-2 text-sm font-semibold">Cold / Penurunan Suhu</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4 mt-5">
+                <label>
+                  <span class="text-sm font-semibold">Durasi</span>
+                  <div class="relative mt-2">
+                    <input id="duration" type="number" min="5" step="5" value="30" class="w-full rounded-xl border border-border px-4 py-3 pr-16 text-sm outline-none focus:border-anteraja-500">
+                    <span class="absolute right-4 top-3 text-xs text-slate-400">detik</span>
+                  </div>
+                </label>
+                <label>
+                  <span class="text-sm font-semibold">Perubahan Suhu</span>
+                  <div class="relative mt-2">
+                    <input id="delta" type="number" min="0.1" step="0.1" value="0.5" class="w-full rounded-xl border border-border px-4 py-3 pr-20 text-sm outline-none focus:border-anteraja-500">
+                    <span class="absolute right-4 top-3 text-xs text-slate-400">°C / 5s</span>
+                  </div>
+                </label>
+              </div>
+
+              <div class="mt-5 rounded-xl bg-blue-50 border border-blue-100 p-4">
+                <div class="text-xs font-semibold text-blue-700">Preview</div>
+                <div id="preview" class="text-sm text-blue-700 mt-2">5.5 → 6.0 → 6.5 → 7.0 → 7.5 → 8.0°C</div>
+              </div>
+
+              <button id="startDisturbance" class="mt-5 w-full px-5 py-3 rounded-xl bg-anteraja-500 hover:bg-anteraja-600 text-white font-semibold">
+                Mulai Simulasi
+              </button>
+            </div>
+
+            <div class="bg-white border border-border rounded-2xl shadow-soft overflow-hidden">
+              <div class="px-6 py-5 border-b border-border">
+                <h3 class="font-bold">Prediksi Hasil</h3>
+                <p class="text-xs text-slate-400 mt-1">Pembacaan simulasi per interval 5 detik.</p>
+              </div>
+              <div class="overflow-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-50 text-xs text-slate-500">
+                    <tr>
+                      <th class="text-left px-6 py-3">Waktu</th>
+                      <th class="text-left px-6 py-3">Suhu</th>
+                      <th class="text-left px-6 py-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="previewTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Service -->
+        <section id="service" class="scroll-mt-24">
+          <div class="mb-5">
+            <p class="text-xs font-semibold text-anteraja-500">06 / Service & Tariff</p>
+            <h2 class="text-2xl font-bold mt-1">Service Matcher & Cost Estimation</h2>
+          </div>
+
+          <div class="grid xl:grid-cols-[1.4fr_1fr] gap-5">
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="bg-white border-2 border-anteraja-500 rounded-2xl p-5 shadow-soft">
+                <div class="flex justify-between gap-3">
+                  <div>
+                    <h3 class="font-bold">Anteraja Pharma</h3>
+                    <p class="text-xs text-slate-500 mt-1">Dedicated pharma handling</p>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-full bg-anteraja-50 text-anteraja-600 text-[11px] font-bold">Recommended</span>
+                </div>
+                <div class="mt-6 text-sm space-y-2">
+                  <div class="flex justify-between"><span class="text-slate-500">SLA</span><strong>1 Hari</strong></div>
+                  <div class="flex justify-between"><span class="text-slate-500">Handling</span><strong>Rp15.000</strong></div>
+                </div>
+                <button class="mt-5 w-full py-2.5 rounded-xl bg-anteraja-500 text-white text-sm font-semibold">Pilih Layanan</button>
+              </div>
+
+              <div class="bg-white border border-border rounded-2xl p-5 shadow-soft">
+                <div class="flex justify-between gap-3">
+                  <div>
+                    <h3 class="font-bold">Same Day</h3>
+                    <p class="text-xs text-slate-500 mt-1">Fast delivery option</p>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold">Compatible</span>
+                </div>
+                <div class="mt-6 text-sm space-y-2">
+                  <div class="flex justify-between"><span class="text-slate-500">SLA</span><strong>8 Jam</strong></div>
+                  <div class="flex justify-between"><span class="text-slate-500">Handling</span><strong>Rp10.000</strong></div>
+                </div>
+                <button class="mt-5 w-full py-2.5 rounded-xl border border-border text-sm font-semibold hover:bg-slate-50">Pilih Layanan</button>
+              </div>
+            </div>
+
+            <div class="bg-white border border-border rounded-2xl shadow-soft p-6">
+              <h3 class="font-bold">Cost Breakdown</h3>
+              <div class="mt-5 space-y-3 text-sm">
+                <div class="flex justify-between"><span class="text-slate-500">Chargeable Weight</span><strong>2.5 kg</strong></div>
+                <div class="flex justify-between"><span class="text-slate-500">Tarif Dasar</span><strong>Rp25.000</strong></div>
+                <div class="flex justify-between"><span class="text-slate-500">Pharma Handling</span><strong>Rp15.000</strong></div>
+                <div class="border-t border-border pt-4 flex justify-between text-base">
+                  <strong>Total Estimasi</strong><strong class="text-anteraja-500">Rp40.000</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Report -->
+        <section id="report" class="scroll-mt-24">
+          <div class="mb-5">
+            <p class="text-xs font-semibold text-anteraja-500">07 / Report</p>
+            <h2 class="text-2xl font-bold mt-1">Pre-Shipment Compliance Report</h2>
+          </div>
+
+          <div class="bg-white border border-border rounded-2xl shadow-soft p-6 lg:p-8">
+            <div class="flex flex-wrap justify-between gap-5 border-b border-border pb-6">
+              <div>
+                <div class="font-bold text-2xl text-anteraja-500">anteraja</div>
+                <div class="text-[10px] tracking-[0.25em] font-semibold text-slate-500">PHARMA</div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs text-slate-400">Simulation ID</div>
+                <div class="font-semibold">DPSVA-20260924-001</div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-between rounded-2xl bg-emerald-50 border border-emerald-200 p-5">
+              <div>
+                <div class="text-xs text-emerald-700">Final Status</div>
+                <div class="text-xl font-bold text-emerald-700 mt-1">READY FOR SHIPMENT</div>
+              </div>
+              <div class="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xl">✓</div>
+            </div>
+
+            <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-4 mt-6">
+              <div class="rounded-xl bg-slate-50 p-4">
+                <div class="text-xs text-slate-400">Category</div>
+                <div class="font-semibold mt-1">Cold Chain</div>
+                <div class="text-xs text-slate-500 mt-1">2°C – 8°C</div>
+              </div>
+              <div class="rounded-xl bg-slate-50 p-4">
+                <div class="text-xs text-slate-400">Temperature</div>
+                <div class="font-semibold mt-1">5.5°C</div>
+                <div class="text-xs text-emerald-600 mt-1">In Range</div>
+              </div>
+              <div class="rounded-xl bg-slate-50 p-4">
+                <div class="text-xs text-slate-400">Service</div>
+                <div class="font-semibold mt-1">Anteraja Pharma</div>
+                <div class="text-xs text-slate-500 mt-1">SLA 1 Hari</div>
+              </div>
+              <div class="rounded-xl bg-slate-50 p-4">
+                <div class="text-xs text-slate-400">Estimated Cost</div>
+                <div class="font-semibold mt-1">Rp40.000</div>
+                <div class="text-xs text-slate-500 mt-1">2.5 kg chargeable</div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex flex-wrap gap-3">
+              <button class="px-5 py-3 rounded-xl bg-anteraja-500 text-white text-sm font-semibold">Print / Save Report PDF</button>
+              <button class="px-5 py-3 rounded-xl border border-border text-sm font-semibold hover:bg-slate-50">Copy Summary</button>
+              <button class="px-5 py-3 rounded-xl border border-border text-sm font-semibold hover:bg-slate-50">Reset Simulation</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="design-system" class="scroll-mt-24">
+          <div class="mb-5">
+            <p class="text-xs font-semibold text-anteraja-500">08 / Design System</p>
+            <h2 class="text-2xl font-bold mt-1">Visual Guidelines</h2>
+          </div>
+
+          <div class="grid xl:grid-cols-3 gap-5">
+            <div class="bg-white border border-border rounded-2xl p-6 shadow-soft">
+              <h3 class="font-bold">Color Palette</h3>
+              <div class="mt-5 space-y-3">
+                <div class="flex items-center gap-3"><span class="w-10 h-10 rounded-xl bg-anteraja-500"></span><div><b>Primary</b><p class="text-xs text-slate-400">#E6007E</p></div></div>
+                <div class="flex items-center gap-3"><span class="w-10 h-10 rounded-xl bg-anteraja-600"></span><div><b>Secondary</b><p class="text-xs text-slate-400">#C9006E</p></div></div>
+                <div class="flex items-center gap-3"><span class="w-10 h-10 rounded-xl bg-emerald-500"></span><div><b>Success</b><p class="text-xs text-slate-400">#00BFA5</p></div></div>
+                <div class="flex items-center gap-3"><span class="w-10 h-10 rounded-xl bg-amber-500"></span><div><b>Warning</b><p class="text-xs text-slate-400">#FFB020</p></div></div>
+                <div class="flex items-center gap-3"><span class="w-10 h-10 rounded-xl bg-red-500"></span><div><b>Error</b><p class="text-xs text-slate-400">#FF3B30</p></div></div>
+                <div class="flex items-center gap-3"><span class="w-10 h-10 rounded-xl bg-slate-800"></span><div><b>Text</b><p class="text-xs text-slate-400">#1F2937</p></div></div>
+              </div>
+            </div>
+
+            <div class="bg-white border border-border rounded-2xl p-6 shadow-soft">
+              <h3 class="font-bold">Typography</h3>
+              <div class="mt-5 space-y-4">
+                <div><div class="text-2xl font-bold">Heading / 24px Bold</div><p class="text-xs text-slate-400">Poppins 700</p></div>
+                <div><div class="text-lg font-semibold">Section / 18px SemiBold</div><p class="text-xs text-slate-400">Poppins 600</p></div>
+                <div><div class="text-sm">Body / 14px Regular</div><p class="text-xs text-slate-400">Poppins 400</p></div>
+                <div><div class="text-xs text-slate-500">Caption / 12px Regular</div><p class="text-xs text-slate-400">Poppins 400</p></div>
+              </div>
+            </div>
+
+            <div class="bg-white border border-border rounded-2xl p-6 shadow-soft">
+              <h3 class="font-bold">UI Style</h3>
+              <ul class="mt-5 text-sm text-slate-600 space-y-3">
+                <li>✓ Rounded corners: 12–16px</li>
+                <li>✓ Cards: white + thin border</li>
+                <li>✓ Shadow: soft and subtle</li>
+                <li>✓ Primary CTA: Anteraja pink</li>
+                <li>✓ Status: green / orange / red</li>
+                <li>✓ Spacing: 8px base scale</li>
+                <li>✓ Icons: simple outline style</li>
+                <li>✓ Responsive desktop + mobile</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Demo interaction -->
+  <script>
+    const tempInput = document.getElementById('tempInput');
+    const verificationBadge = document.getElementById('verificationBadge');
+    const tempMarker = document.getElementById('tempMarker');
+    const liveTemp = document.getElementById('liveTemp');
+    const liveBadge = document.getElementById('liveBadge');
+    const monitorMarker = document.getElementById('monitorMarker');
+    const tempLog = document.getElementById('tempLog');
+    const nextCheck = document.getElementById('nextCheck');
+    const startMonitor = document.getElementById('startMonitor');
+    const durationInput = document.getElementById('duration');
+    const deltaInput = document.getElementById('delta');
+    const preview = document.getElementById('preview');
+    const previewTable = document.getElementById('previewTable');
+    const startDisturbance = document.getElementById('startDisturbance');
+
+    let currentTemp = 5.5;
+    let monitorTimer = null;
+
+    function statusFor(temp) {
+      if (temp < 2) return { label: 'Freezing Warning', color: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-200' };
+      if (temp > 8) return { label: 'Temperature Warning', color: 'text-red-700', bg: 'bg-red-50', border: 'border-red-200' };
+      return { label: 'Normal', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200' };
+    }
+
+    function updateVerification() {
+      const temp = Number(tempInput.value);
+      const pct = Math.max(0, Math.min(100, temp * 10));
+      tempMarker.style.left = pct + '%';
+
+      if (temp < 2 || temp > 8) {
+        const high = temp > 8;
+        verificationBadge.className = `rounded-2xl border ${high ? 'border-red-200 bg-red-50' : 'border-blue-200 bg-blue-50'} p-5`;
+        verificationBadge.innerHTML = `
+          <div class="flex gap-4">
+            <div class="w-10 h-10 rounded-full ${high ? 'bg-red-500' : 'bg-blue-500'} text-white flex items-center justify-center text-lg">!</div>
+            <div>
+              <div class="font-bold ${high ? 'text-red-700' : 'text-blue-700'}">${high ? 'TEMPERATURE EXCURSION' : 'FREEZING EXCURSION'}</div>
+              <p class="text-sm ${high ? 'text-red-700/80' : 'text-blue-700/80'} mt-1">${temp.toFixed(1)}°C berada di luar range 2°C – 8°C.</p>
+            </div>
+          </div>`;
+      } else {
+        verificationBadge.className = 'rounded-2xl border border-emerald-200 bg-emerald-50 p-5';
+        verificationBadge.innerHTML = `
+          <div class="flex gap-4">
+            <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center text-lg">✓</div>
+            <div>
+              <div class="font-bold text-emerald-700">SAFE IN RANGE</div>
+              <p class="text-sm text-emerald-700/80 mt-1">Suhu berada dalam range Cold Chain 2°C – 8°C.</p>
+            </div>
+          </div>`;
+      }
+    }
+
+    function updateLive(temp) {
+      currentTemp = Number(temp.toFixed(1));
+      const status = statusFor(currentTemp);
+      liveTemp.textContent = currentTemp.toFixed(1) + '°C';
+      liveBadge.textContent = status.label;
+      liveBadge.className = `inline-flex mt-3 px-3 py-1 rounded-full text-xs font-semibold ${status.bg} ${status.color}`;
+
+      const pct = Math.max(0, Math.min(100, currentTemp * 10));
+      monitorMarker.style.left = pct + '%';
+
+      const now = new Date();
+      const time = now.toLocaleTimeString('id-ID', { hour12: false });
+      const row = document.createElement('tr');
+      row.className = 'border-t border-border';
+      row.innerHTML = `
+        <td class="px-5 py-3">${time}</td>
+        <td class="px-5 py-3 font-medium">${currentTemp.toFixed(1)}°C</td>
+        <td class="px-5 py-3 ${status.color}">● ${status.label}</td>`;
+      tempLog.prepend(row);
+
+      while (tempLog.children.length > 7) tempLog.lastElementChild.remove();
+
+      const next = new Date(Date.now() + 5000);
+      nextCheck.textContent = next.toLocaleTimeString('id-ID', { hour12: false });
+    }
+
+    function updatePreview() {
+      const duration = Math.max(5, Number(durationInput.value) || 30);
+      const delta = Math.max(0.1, Number(deltaInput.value) || 0.5);
+      const direction = document.querySelector('input[name="disturbance"]:checked').value === 'heat' ? 1 : -1;
+      const steps = Math.min(Math.floor(duration / 5), 24);
+      const values = [];
+      let temp = currentTemp;
+
+      for (let i = 0; i <= steps; i++) {
+        values.push({ time: i * 5, temp });
+        temp += direction * delta;
+      }
+
+      preview.textContent = values.slice(0, 8).map(v => v.temp.toFixed(1)).join(' → ') + (values.length > 8 ? ' …' : '') + '°C';
+
+      previewTable.innerHTML = values.map(v => {
+        const s = statusFor(v.temp);
+        return `<tr class="border-t border-border">
+          <td class="px-6 py-3">${v.time}s</td>
+          <td class="px-6 py-3 font-medium">${v.temp.toFixed(1)}°C</td>
+          <td class="px-6 py-3 ${s.color}">● ${s.label}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    tempInput.addEventListener('input', updateVerification);
+    [durationInput, deltaInput].forEach(el => el.addEventListener('input', updatePreview));
+    document.querySelectorAll('input[name="disturbance"]').forEach(el => el.addEventListener('change', updatePreview));
+
+    startMonitor.addEventListener('click', () => {
+      clearInterval(monitorTimer);
+      updateLive(currentTemp);
+      monitorTimer = setInterval(() => {
+        // Stable simulation: slight random drift within ±0.1°C.
+        const drift = (Math.random() * 0.2) - 0.1;
+        updateLive(Math.max(0, currentTemp + drift));
+      }, 5000);
+    });
+
+    startDisturbance.addEventListener('click', () => {
+      clearInterval(monitorTimer);
+      const duration = Math.max(5, Number(durationInput.value) || 30);
+      const delta = Math.max(0.1, Number(deltaInput.value) || 0.5);
+      const direction = document.querySelector('input[name="disturbance"]:checked').value === 'heat' ? 1 : -1;
+      let elapsed = 0;
+
+      updateLive(currentTemp);
+
+      monitorTimer = setInterval(() => {
+        elapsed += 5;
+        updateLive(currentTemp + direction * delta);
+
+        if (elapsed >= duration) {
+          clearInterval(monitorTimer);
+          // Recovery simulation back toward 5.5°C.
+          monitorTimer = setInterval(() => {
+            const diff = 5.5 - currentTemp;
+            if (Math.abs(diff) < 0.1) {
+              currentTemp = 5.5;
+              updateLive(currentTemp);
+              clearInterval(monitorTimer);
+            } else {
+              updateLive(currentTemp + Math.sign(diff) * Math.min(0.5, Math.abs(diff)));
+            }
+          }, 5000);
+        }
+      }, 5000);
+    });
+
+    updateVerification();
+    updatePreview();
+  </script>
+</body>
+</html>
