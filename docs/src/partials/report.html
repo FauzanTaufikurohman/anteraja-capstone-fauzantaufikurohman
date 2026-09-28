@@ -1,0 +1,49 @@
+<section id="report" class="scroll-mt-24">
+  <div class="mb-5">
+    <h2 class="mt-1 text-2xl font-bold">Pre-shipment compliance report</h2>
+  </div>
+  <div class="rounded-xl border border-line bg-white p-6 shadow-panel lg:p-8">
+    <div class="flex flex-wrap justify-between gap-5 border-b border-line pb-6">
+      <div>
+        <strong class="block text-2xl text-anteraja">anteraja</strong
+        ><small class="text-[10px] font-bold tracking-[.25em] text-muted"
+          >PHARMA</small
+        >
+      </div>
+      <div class="text-left sm:text-right">
+        <small class="block text-xs text-muted">Simulation ID</small
+        ><strong id="reportShipmentId">-</strong>
+      </div>
+    </div>
+    <div
+      class="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[#bdebdc] bg-[#effaf6] p-5"
+    >
+      <div>
+        <small class="block text-xs text-success">Final status</small>
+        <strong id="reportStatus" class="mt-1 block text-xl font-bold text-success">READY FOR SHIPMENT</strong>
+      </div>
+      <span id="reportSummaryStatus" class="text-sm font-bold text-success">Verified in range</span>
+    </div>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="rounded-lg bg-[#f8f9fa] p-4">
+        <small class="text-xs text-muted">Category</small
+        ><strong id="reportCategory" class="mt-1 block">Cold chain</strong
+        ><small id="reportRange" class="text-xs text-muted">2°C - 8°C</small>
+      </div>
+      <div class="rounded-lg bg-[#f8f9fa] p-4">
+        <small class="text-xs text-muted">Temperature</small
+        ><strong id="reportTemperature" class="mt-1 block">5.5°C</strong
+        ><small id="reportTemperatureStatus" class="text-xs text-success">In range</small>
+      </div>
+      <div class="rounded-lg bg-[#f8f9fa] p-4"><small class="text-xs text-muted">Rute</small><strong id="reportRoute" class="mt-1 block">-</strong><small id="reportWeight" class="text-xs text-muted">-</small></div>
+    </div>
+    <div class="mt-6 flex flex-wrap gap-3">
+      <button
+        id="printReport"
+        class="rounded-lg bg-anteraja px-5 py-3 text-sm font-bold text-white hover:bg-anteraja-dark"
+      >
+        Print / save PDF</button
+      >
+    </div>
+  </div>
+</section>
