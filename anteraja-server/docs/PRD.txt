@@ -1,0 +1,127 @@
+================================================================================
+PRODUCT REQUIREMENT DOCUMENT (PRD)
+Aplikasi: Anteraja Pharma — React Thermal Simulation
+Repositori: FauzanTaufikurohman/anteraja-capstone-fauzantaufikurohman
+================================================================================
+
+1. RINGKASAN PRODUK & TUJUAN BISNIS
+--------------------------------------------------------------------------------
+1.1. Deskripsi Produk
+Anteraja Pharma adalah aplikasi berbasis web lokal (Single Page Application / SPA)
+yang dirancang untuk mengelola sampel pengiriman produk farmasi serta mensimulasikan
+ekskursi suhu (temperature excursions) secara interaktif melalui model termal 
+matematis deterministik. Aplikasi ini beroperasi tanpa koneksi langsung ke 
+perangkat keras pendingin atau sensor fisik.
+
+1.2. Tujuan & Nilai Bisnis
+- Menyediakan platform pemodelan simulasi bagi manajer logistik dan teknisi untuk 
+  menganalisis dampak variasi suhu lingkungan pada sampel obat (vaksin, serum, 
+  reagen biologis).
+- Memungkinkan pengujian skenario gangguan pengiriman (pintu terbuka, mati listrik, 
+  pendingin melemah, sensor drift) secara efisien.
+- Evaluasi efektivitas rencana tindakan korektif (seperti penutupan kembali pintu 
+  atau kalibrasi ulang sensor) sebelum diterapkan pada distribusi rantai dingin 
+  (cold chain logistics) nyata.
+
+
+2. TARGET PENGGUNA & LINGKUP OPERASIONAL
+--------------------------------------------------------------------------------
+2.1. Target Pengguna
+- Manajer Logistik Farmasi / Operations Lead.
+- Teknisi Pemeliharaan Kontainer Cold Chain.
+- Pengembang Perangkat Lunak / Student Capstone Reviewer.
+
+2.2. Batasan Operasional & Disclaimer
+- Nilai parameter default pada aplikasi merupakan asumsi awal peragaan, bukan 
+  pengukuran laboratorium fisik terverifikasi.
+- Model mengabaikan gradien spasial, perubahan fase (phase changes), lapisan 
+  packaging multi-layer, kelembapan udara, siklus kompresor spesifik, dan noise 
+  acak sensor.
+- PENGGUNAAN OUTPUT SIMULASI DILARANG KERAS UNTUK KLAIM PEMENUHAN REGULASI 
+  (REGULATORY COMPLIANCE), VALIDASI KONTAINER NYATA, ATAU PENGAMBILAN KEPUTUSAN 
+  KESELAMATAN PRODUK TANPA KALIBRASI FISIK TERVERIFIKASI.
+
+
+3. SPESIFIKASI ARSITEKTUR & STACK TEKNOLOGI
+--------------------------------------------------------------------------------
+3.1. Tech Stack
+- Frontend Framework: React 18 + Vite (SPA)
+- Bahasa Pemrograman: TypeScript
+- Styling & Layout: Tailwind CSS + PostCSS
+- Data Storage: Browser LocalStorage (dengan migrasi otomatis dari format cookie lama)
+- Code Quality: ESLint + TypeScript App Config
+
+3.2. Struktur Direktori Utama (src/)
+- src/lib/shipments.ts    : Definisi tipe data pengiriman, data sampel bawaan, 
+                            dan fungsi utilitas migrasi dari cookie ke LocalStorage.
+- src/lib/thermalModel.ts : Mesin simulasi waktu deterministik (step 1 detik), 
+                            kalkulasi gangguan, dan rencana tindakan koreksi.
+- src/components/partials/ThermalSimulation.tsx : Komponen konfigurasi skenario 
+                            gangguan, grafik suhu, perbandingan koreksi, dan opsi 
+                            save-back ke data pengiriman.
+- src/components/partials/Monitoring.tsx        : Dasbor pemantauan live, pembacaan 
+                            3 titik suhu, serta kontrol tahapan transit.
+
+
+4. SPESIFIKASI FITUR UTAMA
+--------------------------------------------------------------------------------
+[REQ-1] Manajemen Pengiriman Sampel (Shipment Management)
+- Pencatatan dan pemantauan data pengiriman produk farmasi berbasis LocalStorage.
+- Dukungan migrasi otomatis dari format penyimpanan cookie lawas.
+
+[REQ-2] Mesin Simulasi Termal (Thermal Simulation Engine)
+- Pemodelan suhu udara, produk, dan sensor secara kontinyu dengan langkah integrasi 
+  numerik Euler eksplisit 1 detik (1-second explicit Euler step).
+- Kontrol termostat dengan mekanisme histeresis di sekitar titik acuan (set point).
+
+[REQ-3] Konfigurasi & Simulasi Skenario Gangguan (Disturbance Scenarios)
+- Pengujian respon termal terhadap 4 skenario gangguan utama.
+- Visualisasi perbandingan antara kondisi terganggu dan kondisi hasil tindakan koreksi.
+- Fitur simpan balik (save-back) hasil simulasi ke profil pengiriman terkait.
+
+[REQ-4] Dasbor Pemantauan Langsung (Live Monitoring Dashboard)
+- Visualisasi pembacaan 3 titik suhu secara real-time: Suhu Udara (airC), 
+  Suhu Produk (productC), dan Pembacaan Sensor (sensorC).
+- Kontrol tahapan transit pengiriman.
+
+
+5. SPESIFIKASI MODEL TERMAL MATEMATIS
+--------------------------------------------------------------------------------
+Simulasi menggunakan pendekatan keseimbangan energi dua-node (two-node energy balance):
+
+5.1. Variabel Suhu
+- airC (T_air)       : Suhu udara di dalam enclosure/kemasan terisolasi.
+- productC (T_product): Estimasi suhu inti sampel produk farmasi.
+- sensorC (T_sensor) : Pembacaan sensor dengan respon delay orde pertama dan bias kalibrasi.
+
+5.2. Persamaan Diferensial
+1) Keseimbangan Energi Udara Enclosure:
+   C_air * (dT_air / dt) = UA * (T_ambient - T_air) 
+                         + H_product_air * (T_product - T_air) 
+                         + Q_door - Q_cooling
+
+2) Keseimbangan Energi Produk Farmasi:
+   m * cp * (dT_product / dt) = H_product_air * (T_air - T_product)
+
+3) Respon Sensor Termal (First-Order Lag):
+   tau_sensor * (dT_sensor / dt) = T_air + sensor_bias - T_sensor
+
+5.3. Matriks Skenario Gangguan & Rencana Koreksi
+--------------------------------------------------------------------------------
+Skenario          Mekanisme Fisik / Parameter     Dampak Sistem           Rencana Koreksi
+--------------------------------------------------------------------------------
+Pintu Terbuka     Laju konveksi naik (Q_door > 0) Suhu udara melonjak     Penutupan kembali pintu
+Mati Listrik      Daya pendingin mati (Q_cooling=0)Kapasitas pendingin 0  Pemulihan daya listrik
+Pendinginan Lemah Kapasitas Q_cooling berkurang   Suhu naik perlahan      Peningkatan daya pendingin
+Sensor Drift/Bias Offset pembacaan (bias != 0)    Pembacaan palsu/termostat Kalibrasi ulang sensor
+--------------------------------------------------------------------------------
+
+
+6. PANDUAN INTEGRASI & EKSEKUSI LOKAL
+--------------------------------------------------------------------------------
+Perintah CLI untuk pengembangan lokal:
+- Installs dependensi : npm install
+- Server Dev Lokal    : npm run dev
+- Type Check & Build  : npm run build
+- Linter Check        : npm run lint
+================================================================================
