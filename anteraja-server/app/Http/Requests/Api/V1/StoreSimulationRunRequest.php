@@ -23,10 +23,10 @@ class StoreSimulationRunRequest extends FormRequest
     {
         return [
             'disturbance' => ['required', 'string', 'in:none,door-open,power-loss,sensor-drift,weak-cooling'],
-            'totalSteps' => ['required', 'integer', 'min:1', 'max:28800'],
-            'hasExcursion' => ['required', 'boolean'],
+            'durationSeconds' => ['required', 'integer', 'min:1', 'max:28800'],
+            'correctDisturbance' => ['sometimes', 'boolean'],
             'notes' => ['nullable', 'string', 'max:1000'],
-            'thermalConfig' => ['required', 'array'],
+            'thermalConfig' => ['sometimes', 'array'],
             'thermalConfig.setpointC' => ['sometimes', 'numeric', 'between:-100,200'],
             'thermalConfig.ambientC' => ['sometimes', 'numeric', 'between:-100,200'],
             'thermalConfig.enclosureConductanceWPerK' => ['sometimes', 'numeric', 'min:0'],
@@ -40,18 +40,12 @@ class StoreSimulationRunRequest extends FormRequest
             'thermalConfig.hysteresisC' => ['sometimes', 'numeric', 'min:0'],
             'thermalConfig.doorOpen' => ['sometimes', 'boolean'],
             'thermalConfig.powerAvailable' => ['sometimes', 'boolean'],
-            'thermalState' => ['required', 'array'],
-            'thermalState.airC' => ['required', 'numeric', 'between:-100,200'],
-            'thermalState.productC' => ['required', 'numeric', 'between:-100,200'],
-            'thermalState.sensorC' => ['required', 'numeric', 'between:-100,200'],
-            'thermalState.coolingActive' => ['required', 'boolean'],
-            'thermalState.elapsedSeconds' => ['required', 'integer', 'min:0'],
-            'samples' => ['required', 'array', 'min:1', 'max:500'],
-            'samples.*.elapsedSeconds' => ['required', 'integer', 'min:0'],
-            'samples.*.airC' => ['required', 'numeric', 'between:-100,200'],
-            'samples.*.productC' => ['required', 'numeric', 'between:-100,200'],
-            'samples.*.sensorC' => ['required', 'numeric', 'between:-100,200'],
-            'samples.*.coolingActive' => ['required', 'boolean'],
+            'thermalState' => ['sometimes', 'array'],
+            'thermalState.airC' => ['required_with:thermalState', 'numeric', 'between:-100,200'],
+            'thermalState.productC' => ['required_with:thermalState', 'numeric', 'between:-100,200'],
+            'thermalState.sensorC' => ['required_with:thermalState', 'numeric', 'between:-100,200'],
+            'thermalState.coolingActive' => ['required_with:thermalState', 'boolean'],
+            'thermalState.elapsedSeconds' => ['required_with:thermalState', 'integer', 'min:0'],
         ];
     }
 }

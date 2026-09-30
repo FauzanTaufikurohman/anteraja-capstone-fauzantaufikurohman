@@ -48,6 +48,13 @@ class ShipmentController extends Controller
         return response()->json(status: 204);
     }
 
+    public function previewSimulation(StoreSimulationRunRequest $request, string $shipment): JsonResponse
+    {
+        return response()->json([
+            'data' => $this->simulations->preview($shipment, $request->validated()),
+        ]);
+    }
+
     public function storeSimulation(StoreSimulationRunRequest $request, string $shipment): JsonResponse
     {
         $run = $this->simulations->create($shipment, $request->validated());
@@ -60,5 +67,10 @@ class ShipmentController extends Controller
                 'hasExcursion' => $run->has_excursion,
             ],
         ], 201);
+    }
+
+    public function advanceThermal(string $shipment): ShipmentResource
+    {
+        return new ShipmentResource($this->simulations->advanceMonitoring($shipment));
     }
 }
