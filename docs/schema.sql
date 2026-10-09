@@ -192,3 +192,7 @@ INSERT INTO simulation_time_series_logs (simulation_run_id, step_seconds, air_te
 ('r0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', 1, 4.25, 4.01, 4.02, TRUE),
 ('r0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', 2, 4.50, 4.03, 4.05, TRUE),
 ('r0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', 3, 4.80, 4.05, 4.10, TRUE);
+
+-- ==============================================================================
+-- END OF SCHEMA & SEED DATA
+-- ==============================================================================
