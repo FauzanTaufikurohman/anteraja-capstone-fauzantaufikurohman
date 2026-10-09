@@ -1,0 +1,65 @@
+================================================================================
+FUNCTIONAL REQUIREMENT DOCUMENT (FRD)
+ID Fitur   : FR-02
+Nama Fitur : Mesin Simulasi Termal (Thermal Simulation Engine)
+Aplikasi   : Anteraja Pharma — React Thermal Simulation
+Modul      : src/lib/thermalModel.ts
+================================================================================
+
+1. DESKRIPSI FITUR
+--------------------------------------------------------------------------------
+Fitur Mesin Simulasi Termal merupakan inti komputasi matematis deterministik yang 
+menghitung dinamika perubahan suhu dalam sistem pengiriman rantai dingin (cold chain). 
+Mesin ini mensimulasikan perpindahan panas antara udara enclosure, sampel produk, 
+dan sensor pembaca secara kontinyu berbasis waktu.
+
+
+2. PERSYARATAN FUNGSIONAL (FUNCTIONAL REQUIREMENTS)
+--------------------------------------------------------------------------------
+FR-02.1 : Pemodelan Keseimbangan Energi Dua-Node (Two-Node Energy Balance)
+          Sistem harus menghitung 3 variabel suhu utama secara independen namun 
+          saling terhubung:
+          a. airC (T_air)       : Suhu udara dalam kemasan/enclosure.
+          b. productC (T_product): Suhu inti sampel produk farmasi.
+          c. sensorC (T_sensor) : Pembacaan sensor dengan lag orde pertama & bias.
+
+FR-02.2 : Integrasi Numerik Euler Eksplisit 1 Detik
+          Kalkulasi perubahan suhu harus diperbarui setiap selang waktu (step) 
+          dt = 1 detik menggunakan persamaan diferensial eksplisit.
+
+FR-02.3 : Formulasi Persamaan Keseimbangan Suhu Udara (T_air)
+          Kenaikan/penurunan suhu udara dihitung berdasarkan rumus:
+          C_air * (dT_air / dt) = UA * (T_ambient - T_air) 
+                                + H_product_air * (T_product - T_air) 
+                                + Q_door - Q_cooling
+
+FR-02.4 : Formulasi Persamaan Keseimbangan Suhu Produk (T_product)
+          Suhu produk dihitung berdasarkan kapasitas panas dan perpindahan konveksi:
+          m * cp * (dT_product / dt) = H_product_air * (T_air - T_product)
+
+FR-02.5 : Formulasi Respon Sensor Termal (T_sensor)
+          Pembacaan sensor mensimulasikan keterlambatan respon (first-order lag) 
+          dan offset bias:
+          tau_sensor * (dT_sensor / dt) = T_air + sensor_bias - T_sensor
+
+FR-02.6 : Pengendalian Thermostat dengan Histeresis
+          Sistem harus mengontrol daya pendingin (Q_cooling) secara otomatis 
+          berdasarkan batas atas dan batas bawah histeresis dari titik acuan (set point).
+
+
+3. KRITERIA PENERIMAAN (ACCEPTANCE CRITERIA)
+--------------------------------------------------------------------------------
+1. Perhitungan fungsi simulasi pada `thermalModel.ts` menghasilkan deret waktu 
+   (time-series) suhu yang stabil dan kontinu.
+2. Suhu produk (productC) menunjukkan sifat inersia termal (perubahan lebih lambat 
+   dibandingkan suhu udara airC).
+3. Thermostat menyalakan pendinginan saat T_sensor melampaui batas histeresis atas 
+   dan mematikan pendinginan saat mencapai batas bawah.
+
+
+4. BATASAN TEKNIS & DEPENDENSI
+--------------------------------------------------------------------------------
+- Lokasi Kode : src/lib/thermalModel.ts
+- Batasan     : Mengabaikan kelembapan udara, gradien spasial internal, perubahan 
+                fase (phase change), serta noise sensor acak.
+================================================================================
