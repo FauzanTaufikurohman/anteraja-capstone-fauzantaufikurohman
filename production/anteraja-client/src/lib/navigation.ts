@@ -1,0 +1,25 @@
+import type { MouseEvent } from "react";
+
+export function navigateTo(href: string): void {
+  window.history.pushState({}, "", href);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
+export function handleInternalLinkClick(
+  event: MouseEvent<HTMLAnchorElement>,
+  href: string,
+): void {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  ) {
+    return;
+  }
+
+  event.preventDefault();
+  navigateTo(href);
+}

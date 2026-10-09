@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  min-width: 320px;
+  margin: 0;
+}
+button,
+a,
+input,
+select {
+  min-height: 44px;
+}
+:focus-visible {
+  outline: 3px solid #ed0677;
+  outline-offset: 3px;
+}
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  background: #212121;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+.metric-card {
+  border: 1px solid #e6e6e6;
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  background: rgba(33, 33, 33, 0.48);
+  padding: 1rem;
+}
+.modal-panel {
+  width: 100%;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(33, 33, 33, 0.2);
+}
+.modal-close {
+  display: inline-flex;
+  min-height: 44px;
+  width: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  color: #666;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+.modal-close:hover {
+  background: #faeff1;
+  color: #bd005f;
+}
+.nav-item {
+  color: #666;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+.nav-item:hover,
+.nav-item.active {
+  background: #faeff1;
+  color: #bd005f;
+}
+.nav-item:hover {
+  transform: translateX(2px);
+}
+.nav-item.active {
+  font-weight: 700;
+}
+.nav-item.active .nav-icon {
+  color: #bd005f;
+}
+.nav-icon {
+  flex: 0 0 auto;
+  transition: color 0.18s ease;
+}
+.notification-badge {
+  margin-left: auto;
+  display: inline-flex;
+  min-width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #b42318;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+#dashboard table,
+#monitoring table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+#dashboard th,
+#dashboard td,
+#monitoring th,
+#monitoring td {
+  overflow-wrap: anywhere;
+}
+#dashboard th:nth-child(1),
+#dashboard td:nth-child(1) {
+  width: 20%;
+}
+#dashboard th:nth-child(2),
+#dashboard td:nth-child(2) {
+  width: 44%;
+}
+#dashboard th:nth-child(3),
+#dashboard td:nth-child(3) {
+  width: 14%;
+}
+#dashboard th:nth-child(4),
+#dashboard td:nth-child(4) {
+  width: 22%;
+}
+#monitoring th:nth-child(1),
+#monitoring td:nth-child(1) {
+  width: 18%;
+}
+#monitoring th:nth-child(2),
+#monitoring td:nth-child(2) {
+  width: 27%;
+}
+#monitoring th:nth-child(3),
+#monitoring td:nth-child(3) {
+  width: 12%;
+}
+#monitoring th:nth-child(4),
+#monitoring td:nth-child(4) {
+  width: 16%;
+}
+#monitoring th:nth-child(5),
+#monitoring td:nth-child(5) {
+  width: 27%;
+}
+.route-shipment #verification,
+.route-temperature-check #shipment {
+  display: none;
+}
+@media (min-width: 1280px) {
+  #monitoring > .overflow-hidden > .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  #dashboard .overflow-auto {
+    display: none;
+  }
+  #monitoring > .overflow-hidden > .grid > .overflow-hidden {
+    display: none;
+  }
+}
+@media (max-width: 1023px) {
+  #main-content {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
+  aside[aria-label="Navigasi utama"] {
+    height: calc(76px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  aside[aria-label="Navigasi utama"] nav a {
+    min-width: 0;
+    line-height: 1.15;
+    text-align: center;
+  }
+  aside[aria-label="Navigasi utama"] nav a span:not(.notification-badge) {
+    max-width: 5.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  aside[aria-label="Navigasi utama"] .notification-badge {
+    right: 0.6rem;
+    top: 0.15rem;
+    min-width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+}
+@media (min-width: 1024px) {
+  .mobile-only {
+    display: none;
+  }
+}
+@media print {
+  body {
+    background: #fff;
+  }
+  #sidebar-partial,
+  #toast,
+  .skip-link,
+  #printReport {
+    display: none !important;
+  }
+  #main-content {
+    width: 100%;
+  }
+  .shadow-panel {
+    box-shadow: none;
+  }
+}

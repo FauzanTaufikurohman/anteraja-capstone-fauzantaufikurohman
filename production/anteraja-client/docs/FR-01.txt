@@ -1,0 +1,56 @@
+================================================================================
+FUNCTIONAL REQUIREMENT DOCUMENT (FRD)
+ID Fitur   : FR-01
+Nama Fitur : Manajemen Pengiriman Sampel (Shipment Management)
+Aplikasi   : Anteraja Pharma — React Thermal Simulation
+Modul      : src/lib/shipments.ts
+================================================================================
+
+1. DESKRIPSI FITUR
+--------------------------------------------------------------------------------
+Fitur Manajemen Pengiriman Sampel bertanggung jawab untuk mencatat, menyimpan, 
+dan mengelola data pengiriman produk farmasi (seperti vaksin, serum, dan reagen 
+biologis) secara lokal di peramban pengguna. Fitur ini memastikan keberlanjutan 
+data sampel dan memfasilitasi transisi penyimpanan dari skema cookie lawas.
+
+
+2. PERSYARATAN FUNGSIONAL (FUNCTIONAL REQUIREMENTS)
+--------------------------------------------------------------------------------
+FR-01.1 : Pencatatan Profil Pengiriman Sampel
+          Sistem harus mampu menyimpan entitas data pengiriman produk farmasi, 
+          yang mencakup ID pengiriman, nama produk/sampel, batas suhu acuan 
+          (target range), dan status tahapan transit.
+
+FR-01.2 : Penyimpanan Data Lokal Persisten (LocalStorage)
+          Seluruh data pengiriman harus disimpan secara persisten pada peramban 
+          pengguna memanfaatkan mekanisme browser LocalStorage.
+
+FR-01.3 : Migrasi Data Otomatis dari Cookie
+          Sistem harus menyediakan mekanisme deteksi dan migrasi data otomatis 
+          saat modul `shipments.ts` dimuat. Jika ditemukan data pengiriman dalam 
+          format cookie lama, sistem harus mengonversi dan memindahkannya ke 
+          LocalStorage tanpa menghilangkan data pengguna.
+
+FR-01.4 : Inisialisasi Data Sampel Bawaan (Default Samples)
+          Jika LocalStorage masih kosong dan tidak ada cookie lama, sistem harus 
+          secara otomatis mengisi sampel pengiriman bawaan (default shipment data) 
+          sebagai bahan peragaan awal pengguna.
+
+
+3. KRITERIA PENERIMAAN (ACCEPTANCE CRITERIA)
+--------------------------------------------------------------------------------
+1. Data pengiriman yang ditambah atau diubah tetap tersimpan meskipun peramban 
+   ditutup atau dimuat ulang (refresh).
+2. Pemanggilan fungsi migrasi pada `shipments.ts` berhasil membaca cookie lama, 
+   menulis ulang ke kunci LocalStorage, dan membersihkan/mengabaikan cookie lawas.
+3. Struktur data pengiriman sesuai dengan tipe data TypeScript yang didefinisikan 
+   pada proyek.
+
+
+4. BATASAN TEKNIS & DEPENDENSI
+--------------------------------------------------------------------------------
+- Lokasi Kode : src/lib/shipments.ts
+- Dependensi  : Web Storage API (LocalStorage)
+- Batasan     : Beroperasi murni di sisi klien (client-side) tanpa sinkronisasi 
+                ke server backend eksternal.
+================================================================================
