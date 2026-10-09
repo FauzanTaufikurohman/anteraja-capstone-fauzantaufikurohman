@@ -1,0 +1,59 @@
+================================================================================
+FUNCTIONAL REQUIREMENT DOCUMENT (FRD)
+ID Fitur   : FR-03
+Nama Fitur : Konfigurasi & Simulasi Skenario Gangguan (Disturbance Scenarios)
+Aplikasi   : Anteraja Pharma — React Thermal Simulation
+Modul      : src/components/partials/ThermalSimulation.tsx, src/lib/thermalModel.ts
+================================================================================
+
+1. DESKRIPSI FITUR
+--------------------------------------------------------------------------------
+Fitur ini memungkinkan pengguna untuk mengonfigurasi skenario gangguan fisik pada 
+pengiriman, mensimulasikan dampaknya terhadap grafik suhu, membandingkannya dengan 
+tindakan koreksi interaktif, serta menyimpan profil hasil simulasi kembali ke 
+rekam data pengiriman.
+
+
+2. PERSYARATAN FUNGSIONAL (FUNCTIONAL REQUIREMENTS)
+--------------------------------------------------------------------------------
+FR-03.1 : Dukungan 4 Skenario Gangguan Utama
+          Sistem harus menyediakan konfigurasi dan perhitungan simulasi untuk 
+          4 jenis gangguan:
+          a. Pintu Terbuka (Open Door)    : Peningkatan konveksi udara luar (Q_door > 0).
+          b. Mati Listrik (Power Loss)    : Daya pendingin berhenti total (Q_cooling = 0).
+          c. Pendinginan Lemah (Weak Cool): Kapasitas pendinginan menurun drastis.
+          d. Sensor Drift / Bias          : Pembacaan sensor melenceng (bias != 0).
+
+FR-03.2 : Visualisasi Grafik Perbandingan (Disturbed vs Corrected)
+          Sistem harus merender grafik garis interaktif yang membandingkan kurva 
+          suhu saat gangguan terjadi dengan kurva suhu setelah tindakan koreksi 
+          diterapkan.
+
+FR-03.3 : Simulasi Rencana Perbaikan
+          Sistem harus mensimulasikan dampak rencana tindakan koreksi, seperti:
+          - Penutupan kembali pintu container.
+          - Pemulihan daya listrik (power restoration).
+          - Peningkatan kapasitas pendinginan.
+          - Kalibrasi ulang nilai bias sensor.
+
+FR-03.4 : Fitur Simpan Balik (Save-Back) ke Profil Pengiriman
+          Sistem harus menyediakan opsi tombol bagi pengguna untuk menyimpan 
+          hasil/parameter simulasi gangguan yang telah disesuaikan balik ke data 
+          profil pengiriman terkait di LocalStorage.
+
+
+3. KRITERIA PENERIMAAN (ACCEPTANCE CRITERIA)
+--------------------------------------------------------------------------------
+1. Pengguna dapat memilih salah satu dari 4 skenario gangguan pada antarmuka.
+2. Grafik memperlihatkan lonjakan atau perubahan suhu yang sesuai saat parameter 
+   gangguan diaktifkan.
+3. Kurva tindakan koreksi menunjukkan pemulihan tren suhu mendekati rentang aman.
+4. Menekan tombol simpan balik memperbarui data pengiriman di LocalStorage.
+
+
+4. BATASAN TEKNIS & DEPENDENSI
+--------------------------------------------------------------------------------
+- Lokasi Kode : src/components/partials/ThermalSimulation.tsx
+                src/lib/thermalModel.ts
+- Component   : Recharts / Charting library & Tailwind UI
+================================================================================

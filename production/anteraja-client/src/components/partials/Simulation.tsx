@@ -1,0 +1,243 @@
+import { useEffect, useState } from "react";
+import {
+  rangeFor,
+  statusFor,
+} from "../../lib/shipments";
+import { useShipments } from "../../hooks/useShipments";
+
+type Props = { onNotify: (message: string) => void };
+export default function Simulation({ onNotify }: Props) {
+  const { shipments, updateShipment } = useShipments();
+  const queryId = new URLSearchParams(window.location.search).get("shipment");
+  const query = shipments.find((shipment) => shipment.id === queryId) || shipments[0];
+  const [selectedId, setSelectedId] = useState(
+    query?.id || shipments[0]?.id || "",
+  );
+  const [duration, setDuration] = useState("30");
+  const [delta, setDelta] = useState("0.5");
+  const [direction, setDirection] = useState("heat");
+  const [running, setRunning] = useState(false);
+  const [status, setStatus] = useState(
+    "Siap menjalankan simulasi pada shipment terpilih.",
+  );
+  const [, setVersion] = useState(0);
+  const selected = shipments.find((shipment) => shipment.id === selectedId);
+  const values = selected
+    ? Array.from(
+        {
+          length:
+            Math.min(Math.floor(Math.max(5, Number(duration) || 30) / 5), 24) +
+            1,
+        },
+        (_, index) => ({
+          time: index * 5,
+          temperature:
+            selected.temperature +
+            (direction === "heat" ? 1 : -1) *
+              Math.max(0.1, Number(delta) || 0.5) *
+              index,
+        }),
+      )
+    : [];
+  useEffect(() => {
+    if (!running) return undefined;
+    const id = window.setInterval(() => setVersion((value) => value + 1), 5000);
+    return () => window.clearInterval(id);
+  }, [running]);
+  const run = () => {
+    if (!selected) return;
+    const step = direction === "heat" ? 1 : -1;
+    const amount = Math.max(0.1, Number(delta) || 0.5);
+    const total = Math.max(5, Number(duration) || 30);
+    let elapsed = 0;
+    setRunning(true);
+    setStatus(
+      `Simulasi berjalan selama ${total} detik. Perubahan disimpan setiap 5 detik.`,
+    );
+    onNotify("Simulasi berjalan. Buka monitoring untuk melihat perubahan.");
+    const id = window.setInterval(() => {
+      const shipment = shipments.find((item) => item.id === selected.id);
+      if (!shipment) return;
+      void updateShipment(selected.id, {
+        temperature: Number((shipment.temperature + step * amount).toFixed(1)),
+      });
+      elapsed += 5;
+      if (elapsed >= total) {
+        window.clearInterval(id);
+        setRunning(false);
+        setStatus("Simulasi selesai. Data shipment sudah diperbarui pada server.");
+        onNotify("Simulasi selesai dan data tersimpan.");
+      }
+    }, 5000);
+  };
+  return (
+    <section id="disturbance" className="scroll-mt-24">
+      <div className="mb-5">
+        <h2 className="mt-1 text-2xl font-bold">
+          Temperature disturbance simulation
+        </h2>
+        <p className="mt-1 text-sm text-muted">
+          Uji kenaikan atau penurunan suhu tanpa sensor fisik.
+        </p>
+      </div>
+      <div className="grid gap-5 xl:grid-cols-[.9fr_1.1fr]">
+        <div className="rounded-xl border border-line bg-white p-6 shadow-panel">
+          <h3 className="font-bold">Konfigurasi disturbance</h3>
+          <p className="mt-1 text-xs text-muted">
+            Monitoring membaca kondisi setiap 5 detik.
+          </p>
+          <label className="mt-5 block text-sm font-semibold">
+            Shipment yang disimulasikan
+            <select
+              value={selectedId}
+              onChange={(event) => setSelectedId(event.target.value)}
+              className="mt-2 w-full rounded-lg border border-line px-4 py-3 text-sm"
+            >
+              {shipments.map((shipment) => (
+                <option value={shipment.id} key={shipment.id}>
+                  {shipment.id} · {shipment.status}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className="mt-4 rounded-lg bg-[#f8f9fa] p-4">
+            <p className="text-xs font-bold uppercase tracking-wide text-muted">
+              Shipment aktif
+            </p>
+            <p className="mt-2 text-sm font-bold">
+              {selected
+                ? `${selected.origin} → ${selected.destination}`
+                : "Pilih shipment untuk melihat rute."}
+            </p>
+            <p className="mt-1 text-xs text-muted">
+              {selected &&
+                `${selected.category} · ${selected.temperature.toFixed(1)}°C · ${rangeFor(selected).label}`}
+            </p>
+          </div>
+          <fieldset className="mt-6">
+            <legend className="mb-3 text-sm font-bold">Jenis gangguan</legend>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label
+                className={`rounded-lg border p-4 text-sm font-semibold ${direction === "heat" ? "border-anteraja bg-blush" : "border-line"}`}
+              >
+                <input
+                  type="radio"
+                  name="disturbance"
+                  value="heat"
+                  checked={direction === "heat"}
+                  onChange={() => setDirection("heat")}
+                />{" "}
+                Heat / peningkatan suhu
+              </label>
+              <label
+                className={`rounded-lg border p-4 text-sm font-semibold ${direction === "cold" ? "border-anteraja bg-blush" : "border-line"}`}
+              >
+                <input
+                  type="radio"
+                  name="disturbance"
+                  value="cold"
+                  checked={direction === "cold"}
+                  onChange={() => setDirection("cold")}
+                />{" "}
+                Cold / penurunan suhu
+              </label>
+            </div>
+          </fieldset>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <label className="text-sm font-semibold">
+              Durasi
+              <div className="relative mt-2">
+                <input
+                  value={duration}
+                  onChange={(event) => setDuration(event.target.value)}
+                  type="number"
+                  min="5"
+                  step="5"
+                  className="w-full rounded-lg border border-line px-4 py-3 pr-16"
+                />
+                <span className="absolute right-4 top-3 text-xs text-muted">
+                  detik
+                </span>
+              </div>
+            </label>
+            <label className="text-sm font-semibold">
+              Perubahan suhu
+              <div className="relative mt-2">
+                <input
+                  value={delta}
+                  onChange={(event) => setDelta(event.target.value)}
+                  type="number"
+                  min="0.1"
+                  step="0.1"
+                  className="w-full rounded-lg border border-line px-4 py-3 pr-20"
+                />
+                <span className="absolute right-4 top-3 text-xs text-muted">
+                  °C / 5s
+                </span>
+              </div>
+            </label>
+          </div>
+          <div className="mt-5 rounded-lg border border-[#cfe1ff] bg-[#f1f6ff] p-4">
+            <p className="text-xs font-bold text-[#1757a6]">Preview</p>
+            <p className="mt-2 text-sm text-[#1757a6]">
+              {values
+                .slice(0, 8)
+                .map((value) => value.temperature.toFixed(1))
+                .join(" → ")}
+              {values.length > 8 ? " …" : ""}°C
+            </p>
+          </div>
+          <div
+            className={`rounded-lg border px-4 py-3 text-sm ${running ? "border-[#cfe1ff] bg-[#f1f6ff] text-[#1757a6]" : "border-line bg-[#f8f9fa] text-muted"}`}
+            role="status"
+          >
+            {status}
+          </div>
+          <button
+            type="button"
+            disabled={running}
+            onClick={run}
+            className="mt-5 w-full rounded-lg bg-anteraja px-5 py-3 font-bold text-white hover:bg-anteraja-dark disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {running ? "Simulasi berjalan..." : "Mulai simulasi"}
+          </button>
+        </div>
+        <div className="overflow-hidden rounded-xl border border-line bg-white shadow-panel">
+          <div className="border-b border-line px-6 py-5">
+            <h3 className="font-bold">Prediksi hasil</h3>
+            <p className="mt-1 text-xs text-muted">
+              Pembacaan simulasi per interval 5 detik.
+            </p>
+          </div>
+          <div className="overflow-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#f8f9fa] text-xs text-muted">
+                <tr>
+                  <th className="px-6 py-3">Waktu</th>
+                  <th className="px-6 py-3">Suhu</th>
+                  <th className="px-6 py-3">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {values.map((value) => {
+                  const result = statusFor(value.temperature, selected);
+                  return (
+                    <tr className="border-t border-line" key={value.time}>
+                      <td className="px-6 py-3">{value.time}s</td>
+                      <td className="px-6 py-3 font-semibold">
+                        {value.temperature.toFixed(1)}°C
+                      </td>
+                      <td className={`px-6 py-3 ${result.tone}`}>
+                        {result.label}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,50 @@
+================================================================================
+FUNCTIONAL REQUIREMENT DOCUMENT (FRD)
+ID Fitur   : FR-04
+Nama Fitur : Dasbor Pemantauan Langsung (Live Monitoring Dashboard)
+Aplikasi   : Anteraja Pharma — React Thermal Simulation
+Modul      : src/components/partials/Monitoring.tsx
+================================================================================
+
+1. DESKRIPSI FITUR
+--------------------------------------------------------------------------------
+Fitur Dasbor Pemantauan Langsung menyediakan antarmuka visual real-time bagi manajer 
+logistik untuk mengamati 3 titik pembacaan suhu secara simultan serta mengontrol 
+tahapan perjalanan (transit stages) sampel pengiriman farmasi.
+
+
+2. PERSYARATAN FUNGSIONAL (FUNCTIONAL REQUIREMENTS)
+--------------------------------------------------------------------------------
+FR-04.1 : Pemantauan Pembacaan 3 Titik Suhu secara Live
+          Antarmuka dasbor harus menampilkan pembacaan suhu terkini untuk 3 titik:
+          a. Suhu Udara Enclosure (airC)
+          b. Suhu Inti Produk Farmasi (productC)
+          c. Pembacaan Sensor Termal (sensorC)
+
+FR-04.2 : Indikator Status & Ekskursi Suhu
+          Sistem harus memberikan penanda visual (misal: warna status atau peringatan) 
+          apabila pembacaan suhu melampaui rentang batas aman (safe temperature range) 
+          produk farmasi.
+
+FR-04.3 : Kontrol Tahapan Transit (Transit Stage Controls)
+          Sistem harus menyediakan elemen kontrol interaktif untuk memajukan atau 
+          mengubah status tahapan perjalanan/transit pengiriman sampel.
+
+FR-04.4 : Antarmuka Responsif berbasis Tailwind CSS
+          Tampilan dasbor pemantauan harus dirancang secara responsif agar dapat 
+          dilihat dengan nyaman pada berbagai resolusi layar perangkat.
+
+
+3. KRITERIA PENERIMAAN (ACCEPTANCE CRITERIA)
+--------------------------------------------------------------------------------
+1. Ketiga nilai suhu (airC, productC, sensorC) diperbarui secara real-time pada dasbor.
+2. Perubahan tahapan transit melalui tombol kontrol secara langsung memperbarui 
+   status pengiriman pada antarmuka dan penyimpanan lokal.
+3. Tampilan dasbor mempertahankan tata letak yang bersih dan terstruktur.
+
+
+4. BATASAN TEKNIS & DEPENDENSI
+--------------------------------------------------------------------------------
+- Lokasi Kode : src/components/partials/Monitoring.tsx
+- UI Framework: React 18, Tailwind CSS
+================================================================================
