@@ -1,0 +1,96 @@
+<section id="disturbance" class="scroll-mt-24">
+  <div class="mb-5">
+    <h2 class="mt-1 text-2xl font-bold">Temperature disturbance simulation</h2>
+    <p class="mt-1 text-sm text-muted">
+      Uji kenaikan atau penurunan suhu tanpa sensor fisik.
+    </p>
+  </div>
+  <div class="grid gap-5 xl:grid-cols-[.9fr_1.1fr]">
+    <div class="rounded-xl border border-line bg-white p-6 shadow-panel">
+      <h3 class="font-bold">Konfigurasi disturbance</h3>
+      <p class="mt-1 text-xs text-muted">
+        Monitoring membaca kondisi setiap 5 detik.
+      </p>
+      <label class="mt-5 block text-sm font-semibold">Shipment yang disimulasikan<select id="simulationShipmentSelect" class="mt-2 w-full rounded-lg border border-line px-4 py-3 text-sm"></select></label>
+      <div class="mt-4 rounded-lg bg-[#f8f9fa] p-4"><p class="text-xs font-bold uppercase tracking-wide text-muted">Shipment aktif</p><p id="simulationShipmentRoute" class="mt-2 text-sm font-bold">Pilih shipment untuk melihat rute.</p><p id="simulationShipmentState" class="mt-1 text-xs text-muted"></p></div>
+      <fieldset class="mt-6">
+        <legend class="mb-3 text-sm font-bold">Jenis gangguan</legend>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <label
+            class="rounded-lg border border-anteraja bg-blush p-4 text-sm font-semibold"
+            ><input type="radio" name="disturbance" value="heat" checked /> Heat
+            / peningkatan suhu</label
+          ><label
+            class="rounded-lg border border-line p-4 text-sm font-semibold"
+            ><input type="radio" name="disturbance" value="cold" /> Cold /
+            penurunan suhu</label
+          >
+        </div>
+      </fieldset>
+      <div class="mt-5 grid gap-4 sm:grid-cols-2">
+        <label class="text-sm font-semibold"
+          >Durasi
+          <div class="relative mt-2">
+            <input
+              id="duration"
+              type="number"
+              min="5"
+              step="5"
+              value="30"
+              class="w-full rounded-lg border border-line px-4 py-3 pr-16"
+            /><span class="absolute right-4 top-3 text-xs text-muted"
+              >detik</span
+            >
+          </div></label
+        ><label class="text-sm font-semibold"
+          >Perubahan suhu
+          <div class="relative mt-2">
+            <input
+              id="delta"
+              type="number"
+              min="0.1"
+              step="0.1"
+              value="0.5"
+              class="w-full rounded-lg border border-line px-4 py-3 pr-20"
+            /><span class="absolute right-4 top-3 text-xs text-muted"
+              >°C / 5s</span
+            >
+          </div></label
+        >
+      </div>
+      <div class="mt-5 rounded-lg border border-[#cfe1ff] bg-[#f1f6ff] p-4">
+        <p class="text-xs font-bold text-[#1757a6]">Preview</p>
+        <p id="preview" class="mt-2 text-sm text-[#1757a6]"></p>
+      </div>
+      <div id="simulationStatus" class="rounded-lg border border-line bg-[#f8f9fa] px-4 py-3 text-sm text-muted" role="status">Siap menjalankan simulasi pada shipment terpilih.</div>
+      <button
+        id="startDisturbance"
+        class="mt-5 w-full rounded-lg bg-anteraja px-5 py-3 font-bold text-white hover:bg-anteraja-dark"
+      >
+        Mulai simulasi
+      </button>
+    </div>
+    <div
+      class="overflow-hidden rounded-xl border border-line bg-white shadow-panel"
+    >
+      <div class="border-b border-line px-6 py-5">
+        <h3 class="font-bold">Prediksi hasil</h3>
+        <p class="mt-1 text-xs text-muted">
+          Pembacaan simulasi per interval 5 detik.
+        </p>
+      </div>
+      <div class="overflow-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-[#f8f9fa] text-xs text-muted">
+            <tr>
+              <th class="px-6 py-3">Waktu</th>
+              <th class="px-6 py-3">Suhu</th>
+              <th class="px-6 py-3">Status</th>
+            </tr>
+          </thead>
+          <tbody id="previewTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
